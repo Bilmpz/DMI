@@ -41,6 +41,7 @@ internal class Program
         await FetchParameterIntoRowsAsync(httpClient, ParameterTempDry, startUtc, endUtc, rows);
 
         WriteCsv(outputFile, rows.Values);
+        CopyLatestCsvToDocs(outputFile);
 
         Console.WriteLine();
         Console.WriteLine("Færdig.");
@@ -212,26 +213,50 @@ internal class Program
         return null;
     }
 
-    private static void WriteCsv(string filePath, IEnumerable<WeatherRow> rows)
+  private static void WriteCsv(string filePath, IEnumerable<WeatherRow> rows)
+{
+    var danishCulture = CultureInfo.GetCultureInfo("da-DK");
+
+    using var writer = new StreamWriter(
+        filePath,
+        false,
+        new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+    writer.WriteLine("ObservedUtc;HumidityPct;TempDryC");
+
+    foreach (var row in rows)
     {
-        var danishCulture = CultureInfo.GetCultureInfo("da-DK");
+        if (!ShouldIncludeRow(row.ObservedUtc))
+            continue;
 
-        using var writer = new StreamWriter(
-            filePath,
-            false,
-            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        var observedText = row.ObservedUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        var humidityText = row.Humidity?.ToString(danishCulture) ?? "";
+        var tempDryText = row.TempDry?.ToString(danishCulture) ?? "";
 
-        writer.WriteLine("ObservedUtc;HumidityPct;TempDryC");
-
-        foreach (var row in rows)
-        {
-            var observedText = row.ObservedUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-            var humidityText = row.Humidity?.ToString(danishCulture) ?? "";
-            var tempDryText = row.TempDry?.ToString(danishCulture) ?? "";
-
-            writer.WriteLine($"{observedText};{humidityText};{tempDryText}");
-        }
+        writer.WriteLine($"{observedText};{humidityText};{tempDryText}");
     }
+}
+
+    private static void CopyLatestCsvToDocs(string outputFile)
+    {
+        var repoRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", ".."));
+
+        var docsDataDirectory = Path.Combine(repoRoot, "docs", "data");
+        Directory.CreateDirectory(docsDataDirectory);
+
+        var latestCsvFile = Path.Combine(docsDataDirectory, "latest.csv");
+        File.Copy(outputFile, latestCsvFile, overwrite: true);
+
+        Console.WriteLine($"Seneste CSV kopieret til:");
+        Console.WriteLine(latestCsvFile);
+    }
+    
+    private static bool ShouldIncludeRow(DateTimeOffset observedUtc)
+{
+    return observedUtc.Second == 0 &&
+           (observedUtc.Minute == 0 || observedUtc.Minute == 30);
+}
 }
 
 internal sealed class WeatherRow

@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DmiBrandelevCsv", "DmiBrandelevCsv\DmiBrandelevCsv.csproj", "{1107EB83-66EA-E0AA-546A-D1FD8C9286ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1107EB83-66EA-E0AA-546A-D1FD8C9286ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1107EB83-66EA-E0AA-546A-D1FD8C9286ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1107EB83-66EA-E0AA-546A-D1FD8C9286ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1107EB83-66EA-E0AA-546A-D1FD8C9286ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {596D87D2-2689-4EF3-81A2-8AB6F67A0D1E}
+	EndGlobalSection
+EndGlobal

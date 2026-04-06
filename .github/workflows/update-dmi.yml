@@ -1,0 +1,37 @@
+name: Update DMI CSV
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"   # hver 6. time, UTC
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Run app
+        run: dotnet run --project DmiBrandelevCsv/DmiBrandelevCsv.csproj
+
+      - name: Copy newest csv to docs
+        shell: bash
+        run: |
+          mkdir -p docs/data
+          latest_file=$(ls -t DmiBrandelevCsv/bin/Debug/net10.0/output/*.csv | head -n 1)
+          cp "$latest_file" docs/data/latest.csv
+
+      - name: Commit generated file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/latest.csv
+          git commit -m "Update DMI CSV" || echo "No changes to commit"
+          git push

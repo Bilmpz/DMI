@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DMI-data for Brandelev</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef6ff 0%, #f8fbff 100%);
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 42px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 18px;
+      color: #4b5563;
+    }
+
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-block;
+      text-decoration: none;
+      background: #2563eb;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .button:hover {
+      background: #1d4ed8;
+    }
+
+    .button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .button.secondary:hover {
+      background: #d1d5db;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #6b7280;
+    }
+
+    .value {
+      font-size: 34px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .small {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .table-card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .table-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .status {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+      background: white;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f8fafc;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    tr:hover td {
+      background: #f9fbff;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    .loading, .error {
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .loading {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .error {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      .value {
+        font-size: 28px;
+      }
+
+      .container {
+        padding: 20px 14px 36px;
+      }
+
+      .hero, .card, .table-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Live DMI-data</div>
+      <h1>DMI-data for Brandelev</h1>
+      <p class="subtitle">
+        Temperatur og luftfugtighed hentet automatisk fra DMI og vist i et enkelt dashboard.
+      </p>
+
+      <div class="actions">
+        <a class="button" href="data/latest.csv" download>Download nyeste CSV</a>
+        <button class="button secondary" onclick="loadCsv()">Opdater visning</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="card">
+        <h2>Seneste temperatur</h2>
+        <p class="value" id="latestTemp">-</p>
+        <div class="small" id="latestTempTime">Ingen data endnu</div>
+      </div>
+
+      <div class="card">
+        <h2>Seneste luftfugtighed</h2>
+        <p class="value" id="latestHumidity">-</p>
+        <div class="small" id="latestHumidityTime">Ingen data endnu</div>
+      </div>
+
+      <div class="card">
+        <h2>Antal rækker</h2>
+        <p class="value" id="rowCount">-</p>
+        <div class="small">Viser de nyeste 20 i tabellen</div>
+      </div>
+    </section>
+
+    <section class="table-card">
+      <div class="table-header">
+        <h2>Seneste målinger</h2>
+        <div class="status" id="statusText">Indlæser data...</div>
+      </div>
+
+      <div id="messageBox" class="loading">Henter CSV...</div>
+
+      <div class="table-wrapper" id="tableWrapper" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>Tidspunkt (UTC)</th>
+              <th>Luftfugtighed (%)</th>
+              <th>Temperatur (°C)</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">
+      Data vises fra <code>docs/data/latest.csv</code>
+    </div>
+  </div>
+
+  <script>
+    function parseDanishNumber(value) {
+      if (!value) return null;
+      const normalized = value.replace(",", ".");
+      const parsed = Number(normalized);
+      return Number.isNaN(parsed) ? null : parsed;
+    }
+
+    function formatNumber(value, suffix = "") {
+      if (value === null || value === undefined) return "-";
+      return value.toLocaleString("da-DK", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }) + suffix;
+    }
+
+    async function loadCsv() {
+      const messageBox = document.getElementById("messageBox");
+      const tableWrapper = document.getElementById("tableWrapper");
+      const tableBody = document.getElementById("tableBody");
+      const statusText = document.getElementById("statusText");
+
+      messageBox.className = "loading";
+      messageBox.textContent = "Henter CSV...";
+      messageBox.style.display = "block";
+      tableWrapper.style.display = "none";
+      tableBody.innerHTML = "";
+      statusText.textContent = "Indlæser data...";
+
+      try {
+        const response = await fetch("data/latest.csv?t=" + Date.now());
+        if (!response.ok) {
+          throw new Error("Kunne ikke hente CSV-filen");
+        }
+
+        const text = await response.text();
+        const lines = text.trim().split("\n").filter(line => line.trim() !== "");
+
+        if (lines.length <= 1) {
+          throw new Error("CSV-filen indeholder ingen data");
+        }
+
+        const rows = lines.slice(1).map(line => {
+          const parts = line.split(";");
+          return {
+            observedUtc: parts[0] ?? "",
+            humidity: parseDanishNumber(parts[1] ?? ""),
+            tempDry: parseDanishNumber(parts[2] ?? "")
+          };
+        });
+
+        const latest = rows[rows.length - 1];
+
+        document.getElementById("latestTemp").textContent =
+          formatNumber(latest.tempDry, " °C");
+        document.getElementById("latestHumidity").textContent =
+          formatNumber(latest.humidity, " %");
+        document.getElementById("latestTempTime").textContent =
+          "Målt: " + latest.observedUtc;
+        document.getElementById("latestHumidityTime").textContent =
+          "Målt: " + latest.observedUtc;
+        document.getElementById("rowCount").textContent =
+          rows.length.toLocaleString("da-DK");
+
+        const newest20 = rows.slice(-20).reverse();
+
+        for (const row of newest20) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.observedUtc}</td>
+            <td>${formatNumber(row.humidity)}</td>
+            <td>${formatNumber(row.tempDry)}</td>
+          `;
+          tableBody.appendChild(tr);
+        }
+
+        messageBox.style.display = "none";
+        tableWrapper.style.display = "block";
+        statusText.textContent = "Senest indlæst: " + new Date().toLocaleString("da-DK");
+      } catch (error) {
+        messageBox.className = "error";
+        messageBox.textContent = "Fejl: " + error.message;
+        statusText.textContent = "Kunne ikke indlæse data";
+      }
+    }
+
+    loadCsv();
+  </script>
+</body>
+</html>
