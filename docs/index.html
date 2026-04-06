@@ -3,276 +3,502 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DMI-data for Brandelev</title>
+  <title>DMI-data for BA Technologies</title>
+  <link rel="icon" type="image/png" href="BA.png" />
   <style>
+    :root {
+      --bg: #f4f1ea;
+      --paper: #fbf9f4;
+      --surface: #ffffff;
+      --line: #d9d3c7;
+      --text: #1f1d19;
+      --muted: #6d675d;
+      --accent: #2f5d50;
+      --accent-soft: #e4eee9;
+      --danger-bg: #fff1ef;
+      --danger-text: #9e3d32;
+      --shadow: 0 12px 40px rgba(40, 33, 20, 0.08);
+    }
+
     * {
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #eef6ff 0%, #f8fbff 100%);
-      color: #1f2937;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .container {
-      max-width: 1100px;
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(47, 93, 80, 0.06), transparent 35%),
+        linear-gradient(180deg, #f7f4ee 0%, #f1ede5 100%);
+      color: var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 32px 20px 48px;
+      padding: 28px 18px 56px;
+    }
+
+    .shell {
+      background: rgba(251, 249, 244, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(217, 211, 199, 0.8);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 6px;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-text .label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .brand-text .name {
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-status {
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
     }
 
     .hero {
-      background: white;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      padding: 28px 22px 14px;
     }
 
-    .badge {
-      display: inline-block;
-      background: #dbeafe;
-      color: #1d4ed8;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: bold;
+    .hero-left {
+      padding-right: 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
       margin-bottom: 14px;
     }
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: 42px;
-      line-height: 1.1;
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
     }
 
-    .subtitle {
+    h1 {
       margin: 0;
-      font-size: 18px;
-      color: #4b5563;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+
+    .intro {
+      margin: 18px 0 0;
+      max-width: 620px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: #4d473f;
     }
 
     .actions {
-      margin-top: 22px;
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      margin-top: 26px;
     }
 
     .button {
-      display: inline-block;
-      text-decoration: none;
-      background: #2563eb;
-      color: white;
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
       padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: bold;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
       transition: 0.2s ease;
     }
 
     .button:hover {
-      background: #1d4ed8;
+      transform: translateY(-1px);
+      border-color: #bfb7a8;
+      background: #fffdfa;
     }
 
-    .button.secondary {
-      background: #e5e7eb;
-      color: #111827;
+    .button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
     }
 
-    .button.secondary:hover {
-      background: #d1d5db;
+    .button.primary:hover {
+      background: #254a3f;
+      border-color: #254a3f;
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+    .hero-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
     }
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+    .hero-right {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(250,248,243,0.95) 100%);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
     }
 
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #6b7280;
+    .panel-label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
-    .value {
-      font-size: 34px;
-      font-weight: bold;
+    .panel-big {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3rem;
+      line-height: 1;
       margin: 0;
+      font-weight: 600;
     }
 
-    .small {
+    .panel-meta {
+      color: var(--muted);
       font-size: 14px;
-      color: #6b7280;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .mini-card .k {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .mini-card .v {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .mini-card .s {
+      font-size: 13px;
+      color: var(--muted);
       margin-top: 6px;
     }
 
-    .table-card {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-      overflow: hidden;
+    .content {
+      padding: 8px 22px 22px;
     }
 
-    .table-header {
+    .section-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+      align-items: end;
+      gap: 16px;
+      padding: 18px 2px 14px;
     }
 
-    .table-header h2 {
+    .section-head h2 {
       margin: 0;
-      font-size: 24px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 600;
     }
 
-    .status {
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
       font-size: 14px;
-      color: #6b7280;
     }
 
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 14px;
-      border: 1px solid #e5e7eb;
+    .message {
+      display: block;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.76);
+      border-radius: 18px;
+      padding: 16px 18px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .message.error {
+      background: var(--danger-bg);
+      border-color: #efc8c1;
+      color: var(--danger-text);
+    }
+
+    .table-wrap {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.74);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px;
-      background: white;
     }
 
     th, td {
+      padding: 16px 18px;
       text-align: left;
-      padding: 14px 16px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid rgba(217, 211, 199, 0.72);
+      font-size: 15px;
     }
 
     th {
-      background: #f8fafc;
-      font-size: 14px;
-      color: #374151;
+      background: rgba(244, 241, 234, 0.9);
+      color: #4a453d;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    tr:hover td {
-      background: #f9fbff;
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: rgba(255,255,255,0.85);
     }
 
     .footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #6b7280;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 22px 24px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
     }
 
-    .loading, .error {
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 16px;
+    code {
+      background: rgba(0,0,0,0.04);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
     }
 
-    .loading {
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
 
-    .error {
-      background: #fef2f2;
-      color: #b91c1c;
+      .hero-left {
+        padding-right: 0;
+      }
     }
 
     @media (max-width: 640px) {
-      h1 {
-        font-size: 32px;
+      .page {
+        padding: 12px 10px 30px;
       }
 
-      .value {
-        font-size: 28px;
+      .shell {
+        border-radius: 20px;
       }
 
-      .container {
-        padding: 20px 14px 36px;
+      .topbar,
+      .hero,
+      .content,
+      .footer {
+        padding-left: 14px;
+        padding-right: 14px;
       }
 
-      .hero, .card, .table-card {
-        padding: 18px;
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      th, td {
+        padding: 13px 12px;
+        font-size: 14px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 640px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <section class="hero">
-      <div class="badge">Live DMI-data</div>
-      <h1>DMI-data for Brandelev</h1>
-      <p class="subtitle">
-        Temperatur og luftfugtighed hentet automatisk fra DMI og vist i et enkelt dashboard.
-      </p>
-
-      <div class="actions">
-        <a class="button" href="data/latest.csv" download>Download nyeste CSV</a>
-        <button class="button secondary" onclick="loadCsv()">Opdater visning</button>
-      </div>
-    </section>
-
-    <section class="stats">
-      <div class="card">
-        <h2>Seneste temperatur</h2>
-        <p class="value" id="latestTemp">-</p>
-        <div class="small" id="latestTempTime">Ingen data endnu</div>
+  <div class="page">
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <img src="BA.png" alt="BA Technologies logo" />
+          <div class="brand-text">
+            <div class="label">Weather Monitor</div>
+            <div class="name">BA Technologies</div>
+          </div>
+        </div>
+        <div class="top-status" id="statusText">Indlæser data...</div>
       </div>
 
-      <div class="card">
-        <h2>Seneste luftfugtighed</h2>
-        <p class="value" id="latestHumidity">-</p>
-        <div class="small" id="latestHumidityTime">Ingen data endnu</div>
+      <section class="hero">
+        <div class="hero-left">
+          <div class="eyebrow">DMI · Brandelev</div>
+          <h1>Vejrdata i et mere enkelt format.</h1>
+          <p class="intro">
+            Temperatur og luftfugtighed bliver hentet automatisk fra DMI, via API.
+          </p>
+
+          <div class="actions">
+            <a class="button primary" id="downloadLink" href="data/latest.csv" download>Download CSV</a>
+            <button class="button" onclick="loadCsv()">Opdater data</button>
+          </div>
+
+          <div class="hero-note">
+            Kilde: <code>data/latest.csv</code>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div>
+            <div class="panel-label">Seneste temperatur</div>
+            <p class="panel-big" id="latestTemp">-</p>
+            <div class="panel-meta" id="latestTempTime">Ingen data endnu</div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <div class="k">Luftfugtighed</div>
+              <div class="v" id="latestHumidity">-</div>
+              <div class="s" id="latestHumidityTime">Ingen data endnu</div>
+            </div>
+
+            <div class="mini-card">
+              <div class="k">Rækker i datasæt</div>
+              <div class="v" id="rowCount">-</div>
+              <div class="s">Viser de 20 nyeste nedenfor</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content">
+        <div class="section-head">
+          <div>
+            <h2>Seneste målinger</h2>
+            <p>Nyeste observationer fra den genererede CSV-fil.</p>
+          </div>
+        </div>
+
+        <div id="messageBox" class="message">Henter CSV...</div>
+
+        <div class="table-wrap" id="tableWrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tidspunkt (UTC)</th>
+                <th>Luftfugtighed</th>
+                <th>Temperatur</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="card">
-        <h2>Antal rækker</h2>
-        <p class="value" id="rowCount">-</p>
-        <div class="small">Viser de nyeste 20 i tabellen</div>
+      <div class="footer">
+        <div>Data vises fra <code>data/latest.csv</code></div>
+        <div>Made by Oliver Loebel</div>
       </div>
-    </section>
-
-    <section class="table-card">
-      <div class="table-header">
-        <h2>Seneste målinger</h2>
-        <div class="status" id="statusText">Indlæser data...</div>
-      </div>
-
-      <div id="messageBox" class="loading">Henter CSV...</div>
-
-      <div class="table-wrapper" id="tableWrapper" style="display:none;">
-        <table>
-          <thead>
-            <tr>
-              <th>Tidspunkt (UTC)</th>
-              <th>Luftfugtighed (%)</th>
-              <th>Temperatur (°C)</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <div class="footer">
-      Data vises fra <code>docs/data/latest.csv</code>
     </div>
   </div>
 
@@ -297,8 +523,9 @@
       const tableWrapper = document.getElementById("tableWrapper");
       const tableBody = document.getElementById("tableBody");
       const statusText = document.getElementById("statusText");
+      const downloadLink = document.getElementById("downloadLink");
 
-      messageBox.className = "loading";
+      messageBox.className = "message";
       messageBox.textContent = "Henter CSV...";
       messageBox.style.display = "block";
       tableWrapper.style.display = "none";
@@ -306,7 +533,10 @@
       statusText.textContent = "Indlæser data...";
 
       try {
-        const response = await fetch("data/latest.csv?t=" + Date.now());
+        const csvUrl = "data/latest.csv?t=" + Date.now();
+        downloadLink.href = csvUrl;
+
+        const response = await fetch(csvUrl, { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Kunne ikke hente CSV-filen");
         }
@@ -346,8 +576,8 @@
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${row.observedUtc}</td>
-            <td>${formatNumber(row.humidity)}</td>
-            <td>${formatNumber(row.tempDry)}</td>
+            <td>${formatNumber(row.humidity, " %")}</td>
+            <td>${formatNumber(row.tempDry, " °C")}</td>
           `;
           tableBody.appendChild(tr);
         }
@@ -356,7 +586,7 @@
         tableWrapper.style.display = "block";
         statusText.textContent = "Senest indlæst: " + new Date().toLocaleString("da-DK");
       } catch (error) {
-        messageBox.className = "error";
+        messageBox.className = "message error";
         messageBox.textContent = "Fejl: " + error.message;
         statusText.textContent = "Kunne ikke indlæse data";
       }

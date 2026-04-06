@@ -1,37 +1,56 @@
-name: Update DMI CSV
+name: Update and Deploy DMI site
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"   # hver 6. time, UTC
+    - cron: "*/30 * * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Run app
         run: dotnet run --project DmiBrandelevCsv/DmiBrandelevCsv.csproj
 
-      - name: Copy newest csv to docs
-        shell: bash
+      - name: Verify generated files
         run: |
-          mkdir -p docs/data
-          latest_file=$(ls -t DmiBrandelevCsv/bin/Debug/net10.0/output/*.csv | head -n 1)
-          cp "$latest_file" docs/data/latest.csv
+          ls -la docs
+          ls -la docs/data
 
-      - name: Commit generated file
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/latest.csv
-          git commit -m "Update DMI CSV" || echo "No changes to commit"
-          git push
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
