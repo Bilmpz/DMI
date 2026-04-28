@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\olive\\DMI\\DmiBrandelevCsv\\DmiBrandelevCsv.csproj": {}
+    "/Users/oliverlobel/DMI/DmiBrandelevCsv/DmiBrandelevCsv.csproj": {}
   },
   "projects": {
-    "C:\\Users\\olive\\DMI\\DmiBrandelevCsv\\DmiBrandelevCsv.csproj": {
+    "/Users/oliverlobel/DMI/DmiBrandelevCsv/DmiBrandelevCsv.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\olive\\DMI\\DmiBrandelevCsv\\DmiBrandelevCsv.csproj",
+        "projectUniqueName": "/Users/oliverlobel/DMI/DmiBrandelevCsv/DmiBrandelevCsv.csproj",
         "projectName": "DmiBrandelevCsv",
-        "projectPath": "C:\\Users\\olive\\DMI\\DmiBrandelevCsv\\DmiBrandelevCsv.csproj",
-        "packagesPath": "C:\\Users\\olive\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\olive\\DMI\\DmiBrandelevCsv\\obj\\",
+        "projectPath": "/Users/oliverlobel/DMI/DmiBrandelevCsv/DmiBrandelevCsv.csproj",
+        "packagesPath": "/Users/oliverlobel/.nuget/packages/",
+        "outputPath": "/Users/oliverlobel/DMI/DmiBrandelevCsv/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\olive\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/oliverlobel/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
