@@ -14,7 +14,7 @@ internal class Program
     public static async Task Main()
     {
         var startUtc = DateTimeOffset.Parse(
-            "2026-01-01T00:00:00Z",
+            "2024-01-01T00:00:00Z",
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
