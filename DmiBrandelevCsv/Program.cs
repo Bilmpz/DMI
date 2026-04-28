@@ -9,7 +9,7 @@ internal class Program
     private const string ParameterHumidity = "humidity";
     private const string ParameterTempDry = "temp_dry";
     private const string BaseUrl = "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items";
-    private const int PageLimit = 250000;
+    private const int PageLimit = 300000; // RETTET: var 1000 — DMI tillader op til 300.000 per kald
 
     public static async Task Main()
     {
@@ -62,9 +62,12 @@ internal class Program
         foreach (var (chunkStartUtc, chunkEndUtc) in SplitIntoMonthlyRanges(startUtc, endUtc))
         {
             string? nextUrl = BuildUrl(StationId, parameterId, chunkStartUtc, chunkEndUtc, PageLimit);
+            int pageCount = 0;
+            int rowsInChunk = 0;
 
             while (!string.IsNullOrWhiteSpace(nextUrl))
             {
+                pageCount++;
                 using var response = await httpClient.GetAsync(nextUrl);
                 var responseText = await response.Content.ReadAsStringAsync();
 
@@ -121,20 +124,22 @@ internal class Program
                         }
 
                         if (parameterId == ParameterHumidity)
-                        {
                             row.Humidity = value;
-                        }
                         else if (parameterId == ParameterTempDry)
-                        {
                             row.TempDry = value;
-                        }
+
+                        rowsInChunk++;
                     }
                 }
 
                 nextUrl = GetNextLink(document.RootElement);
+
+                // RETTET: vis progress hvis der er flere sider (usandsynligt med limit=300000)
+                if (nextUrl != null)
+                    Console.WriteLine($"  Side {pageCount} hentet, henter næste side...");
             }
 
-            Console.WriteLine($"  OK måned: {chunkStartUtc:yyyy-MM-dd} -> {chunkEndUtc:yyyy-MM-dd}");
+            Console.WriteLine($"  OK: {chunkStartUtc:yyyy-MM-dd} -> {chunkEndUtc:yyyy-MM-dd} ({rowsInChunk} observationer)");
         }
     }
 
@@ -152,11 +157,7 @@ internal class Program
             var firstOfCurrentMonth = new DateTimeOffset(
                 currentStart.Year,
                 currentStart.Month,
-                1,
-                0,
-                0,
-                0,
-                TimeSpan.Zero);
+                1, 0, 0, 0, TimeSpan.Zero);
 
             var firstOfNextMonth = firstOfCurrentMonth.AddMonths(1);
             var currentEnd = firstOfNextMonth.AddSeconds(-1);
@@ -213,50 +214,58 @@ internal class Program
         return null;
     }
 
-  private static void WriteCsv(string filePath, IEnumerable<WeatherRow> rows)
-{
-    var danishCulture = CultureInfo.GetCultureInfo("da-DK");
-
-    using var writer = new StreamWriter(
-        filePath,
-        false,
-        new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-
-    writer.WriteLine("ObservedUtc;HumidityPct;TempDryC");
-
-    foreach (var row in rows)
+    private static void WriteCsv(string filePath, IEnumerable<WeatherRow> rows)
     {
-        if (!ShouldIncludeRow(row.ObservedUtc))
-            continue;
+        var danishCulture = CultureInfo.GetCultureInfo("da-DK");
 
-        var observedText = row.ObservedUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-        var humidityText = row.Humidity?.ToString(danishCulture) ?? "";
-        var tempDryText = row.TempDry?.ToString(danishCulture) ?? "";
+        using var writer = new StreamWriter(
+            filePath,
+            false,
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
-        writer.WriteLine($"{observedText};{humidityText};{tempDryText}");
+        writer.WriteLine("ObservedUtc;HumidityPct;TempDryC");
+
+        foreach (var row in rows)
+        {
+            if (!ShouldIncludeRow(row.ObservedUtc))
+                continue;
+
+            var observedText = row.ObservedUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            var humidityText = row.Humidity?.ToString(danishCulture) ?? "";
+            var tempDryText = row.TempDry?.ToString(danishCulture) ?? "";
+
+            writer.WriteLine($"{observedText};{humidityText};{tempDryText}");
+        }
     }
-}
 
     private static void CopyLatestCsvToDocs(string outputFile)
     {
-        var repoRoot = Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory, "..", "..", "..", ".."));
+        // RETTET: wrappet i try/catch så et manglende docs-bibliotek ikke crasher programmet
+        try
+        {
+            var repoRoot = Path.GetFullPath(Path.Combine(
+                AppContext.BaseDirectory, "..", "..", "..", ".."));
 
-        var docsDataDirectory = Path.Combine(repoRoot, "docs", "data");
-        Directory.CreateDirectory(docsDataDirectory);
+            var docsDataDirectory = Path.Combine(repoRoot, "docs", "data");
+            Directory.CreateDirectory(docsDataDirectory);
 
-        var latestCsvFile = Path.Combine(docsDataDirectory, "latest.csv");
-        File.Copy(outputFile, latestCsvFile, overwrite: true);
+            var latestCsvFile = Path.Combine(docsDataDirectory, "latest.csv");
+            File.Copy(outputFile, latestCsvFile, overwrite: true);
 
-        Console.WriteLine($"Seneste CSV kopieret til:");
-        Console.WriteLine(latestCsvFile);
+            Console.WriteLine($"Seneste CSV kopieret til:");
+            Console.WriteLine(latestCsvFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Advarsel: kunne ikke kopiere til docs/data: {ex.Message}");
+        }
     }
-    
+
     private static bool ShouldIncludeRow(DateTimeOffset observedUtc)
-{
-    return observedUtc.Second == 0 &&
-           (observedUtc.Minute == 0 || observedUtc.Minute == 30);
-}
+    {
+        return observedUtc.Second == 0 &&
+               (observedUtc.Minute == 0 || observedUtc.Minute == 30);
+    }
 }
 
 internal sealed class WeatherRow
