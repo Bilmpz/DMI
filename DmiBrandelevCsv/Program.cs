@@ -9,7 +9,7 @@ internal class Program
     private const string ParameterHumidity = "humidity";
     private const string ParameterTempDry = "temp_dry";
     private const string BaseUrl = "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items";
-    private const int PageLimit = 1000;
+    private const int PageLimit = 250000;
 
     public static async Task Main()
     {
