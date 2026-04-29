@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DmiBrandelevCsv")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aa6a096dd59e7048f7bbc7804f8633dd44dfcd21")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f9c60b7769626ffa200f970a8233783cda98bb8")]
 [assembly: System.Reflection.AssemblyProductAttribute("DmiBrandelevCsv")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DmiBrandelevCsv")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
