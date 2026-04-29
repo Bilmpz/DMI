@@ -1,0 +1,698 @@
+[
+  {
+    "id": "06141",
+    "name": "Abed",
+    "lat": 54.8275,
+    "lon": 11.3292
+  },
+  {
+    "id": "06009",
+    "name": "Akraberg Fyr",
+    "lat": 61.3957,
+    "lon": -6.6818
+  },
+  {
+    "id": "04285",
+    "name": "Angissoq",
+    "lat": 59.9908,
+    "lon": -45.1467
+  },
+  {
+    "id": "06079",
+    "name": "Anholt Fyr",
+    "lat": 56.736,
+    "lon": 11.6511
+  },
+  {
+    "id": "04351",
+    "name": "Aputiteeq",
+    "lat": 67.7817,
+    "lon": -32.2842
+  },
+  {
+    "id": "06109",
+    "name": "Askov",
+    "lat": 55.4715,
+    "lon": 9.1124
+  },
+  {
+    "id": "04228",
+    "name": "Attu",
+    "lat": 67.7833,
+    "lon": -53.9667
+  },
+  {
+    "id": "06104",
+    "name": "Billund Lufthavn",
+    "lat": 55.7379,
+    "lon": 9.1674
+  },
+  {
+    "id": "06081",
+    "name": "Bl\u00E5vandshuk Fyr",
+    "lat": 55.5576,
+    "lon": 8.083
+  },
+  {
+    "id": "06190",
+    "name": "Bornholms Lufthavn",
+    "lat": 55.0677,
+    "lon": 14.7494
+  },
+  {
+    "id": "06082",
+    "name": "Borris",
+    "lat": 55.9591,
+    "lon": 8.6242
+  },
+  {
+    "id": "06154",
+    "name": "Brandelev",
+    "lat": 55.2075,
+    "lon": 11.8605
+  },
+  {
+    "id": "06111",
+    "name": "B\u00E5g\u00F8 Fyr",
+    "lat": 55.2976,
+    "lon": 9.7994
+  },
+  {
+    "id": "06191",
+    "name": "Christians\u00F8 Fyr",
+    "lat": 55.3218,
+    "lon": 15.1875
+  },
+  {
+    "id": "04330",
+    "name": "Daneborg",
+    "lat": 74.3,
+    "lon": -20.2167
+  },
+  {
+    "id": "04320",
+    "name": "Danmarkshavn",
+    "lat": 76.7694,
+    "lon": -18.6681
+  },
+  {
+    "id": "06183",
+    "name": "Drogden Fyr",
+    "lat": 55.5364,
+    "lon": 12.7114
+  },
+  {
+    "id": "06014",
+    "name": "Eioi",
+    "lat": 62.2995,
+    "lon": -7.074
+  },
+  {
+    "id": "06124",
+    "name": "Elvira Madigan Airport",
+    "lat": 55.0144,
+    "lon": 10.5693
+  },
+  {
+    "id": "06080",
+    "name": "Esbjerg Lufthavn",
+    "lat": 55.5281,
+    "lon": 8.5626
+  },
+  {
+    "id": "06135",
+    "name": "Flakkebjerg",
+    "lat": 55.3224,
+    "lon": 11.3879
+  },
+  {
+    "id": "06060",
+    "name": "Flyvestation Karup",
+    "lat": 56.2935,
+    "lon": 9.1138
+  },
+  {
+    "id": "06110",
+    "name": "Flyvestation Skrydstrup",
+    "lat": 55.2251,
+    "lon": 9.2634
+  },
+  {
+    "id": "06030",
+    "name": "Flyvestation \u00C5lborg",
+    "lat": 57.0963,
+    "lon": 9.8505
+  },
+  {
+    "id": "06071",
+    "name": "Forn\u00E6s Fyr",
+    "lat": 56.4435,
+    "lon": 10.9574
+  },
+  {
+    "id": "06069",
+    "name": "Foulum",
+    "lat": 56.4931,
+    "lon": 9.5709
+  },
+  {
+    "id": "06043",
+    "name": "Frederikshavn",
+    "lat": 57.4064,
+    "lon": 10.5157
+  },
+  {
+    "id": "06008",
+    "name": "Frodba Heliport",
+    "lat": 61.5437,
+    "lon": -6.7745
+  },
+  {
+    "id": "06039",
+    "name": "Galten",
+    "lat": 56.1618,
+    "lon": 9.9033
+  },
+  {
+    "id": "06149",
+    "name": "Gedser Fyr",
+    "lat": 54.5639,
+    "lon": 11.964
+  },
+  {
+    "id": "06147",
+    "name": "Gedser Rev Fyrskib",
+    "lat": 54.4536,
+    "lon": 12.1791
+  },
+  {
+    "id": "06169",
+    "name": "Gniben",
+    "lat": 56.0067,
+    "lon": 11.2805
+  },
+  {
+    "id": "06023",
+    "name": "Gorm C",
+    "lat": 55.5797,
+    "lon": 4.7587
+  },
+  {
+    "id": "06049",
+    "name": "Hald Vest",
+    "lat": 56.5604,
+    "lon": 10.0929
+  },
+  {
+    "id": "06193",
+    "name": "Hammer Odde Fyr",
+    "lat": 55.2981,
+    "lon": 14.7726
+  },
+  {
+    "id": "04313",
+    "name": "Henrik Kr\u00F8yer Holme",
+    "lat": 80.65,
+    "lon": -13.7167
+  },
+  {
+    "id": "06156",
+    "name": "Holb\u00E6k",
+    "lat": 55.7154,
+    "lon": 11.7088
+  },
+  {
+    "id": "06102",
+    "name": "HORSENS/BYGHOLM",
+    "lat": 55.868,
+    "lon": 9.7872
+  },
+  {
+    "id": "06058",
+    "name": "Hvide Sande",
+    "lat": 56.0005,
+    "lon": 8.1293
+  },
+  {
+    "id": "04390",
+    "name": "Ikerasassuaq",
+    "lat": 60.0333,
+    "lon": -43.1167
+  },
+  {
+    "id": "04373",
+    "name": "Ikermit",
+    "lat": 64.7833,
+    "lon": -40.3
+  },
+  {
+    "id": "04382",
+    "name": "Ikermiuarssuk",
+    "lat": 61.9367,
+    "lon": -42.0675
+  },
+  {
+    "id": "06068",
+    "name": "Isenvad",
+    "lat": 56.0939,
+    "lon": 9.1811
+  },
+  {
+    "id": "04339",
+    "name": "Ittoqqortoormiit",
+    "lat": 70.4833,
+    "lon": -21.95
+  },
+  {
+    "id": "06181",
+    "name": "J\u00E6gersborg",
+    "lat": 55.7664,
+    "lon": 12.5263
+  },
+  {
+    "id": "04301",
+    "name": "Kap Morris Jesup",
+    "lat": 83.65,
+    "lon": -33.3667
+  },
+  {
+    "id": "06119",
+    "name": "Kegn\u00E6s Fyr",
+    "lat": 54.8529,
+    "lon": 9.988
+  },
+  {
+    "id": "06012",
+    "name": "Kirkja",
+    "lat": 62.3195,
+    "lon": -6.3205
+  },
+  {
+    "id": "06074",
+    "name": "Kirstinesminde Flyveplads",
+    "lat": 56.1945,
+    "lon": 10.1703
+  },
+  {
+    "id": "04208",
+    "name": "Kitsissorsuit",
+    "lat": 74.0606,
+    "lon": -57.7231
+  },
+  {
+    "id": "04203",
+    "name": "Kitsissut",
+    "lat": 76.7333,
+    "lon": -73.1208
+  },
+  {
+    "id": "06013",
+    "name": "Klaksvik Heliport",
+    "lat": 62.2178,
+    "lon": -6.5766
+  },
+  {
+    "id": "06108",
+    "name": "Kolding Lufthavn",
+    "lat": 55.4376,
+    "lon": 9.3338
+  },
+  {
+    "id": "06180",
+    "name": "K\u00F8benhavns Lufthavn",
+    "lat": 55.614,
+    "lon": 12.6455
+  },
+  {
+    "id": "06174",
+    "name": "K\u00F8ge",
+    "lat": 55.4634,
+    "lon": 12.1913
+  },
+  {
+    "id": "06186",
+    "name": "Landboh\u00F8jskolen",
+    "lat": 55.6814,
+    "lon": 12.5403
+  },
+  {
+    "id": "06138",
+    "name": "Lang\u00F8",
+    "lat": 54.8205,
+    "lon": 10.9939
+  },
+  {
+    "id": "06056",
+    "name": "Mejrup",
+    "lat": 56.383,
+    "lon": 8.6705
+  },
+  {
+    "id": "04221",
+    "name": "Mittarfik Ilulissat",
+    "lat": 69.2403,
+    "lon": -51.0661
+  },
+  {
+    "id": "04231",
+    "name": "Mittarfik Kangerlussuaq",
+    "lat": 67.0181,
+    "lon": -50.7033
+  },
+  {
+    "id": "04361",
+    "name": "Mittarfik Kulusuk",
+    "lat": 65.5736,
+    "lon": -37.1236
+  },
+  {
+    "id": "04241",
+    "name": "Mittarfik Maniitsoq",
+    "lat": 65.4125,
+    "lon": -52.9394
+  },
+  {
+    "id": "04270",
+    "name": "Mittarfik Narsarsuaq",
+    "lat": 61.1608,
+    "lon": -45.4256
+  },
+  {
+    "id": "04341",
+    "name": "Mittarfik Nerlerit Inaat",
+    "lat": 70.7431,
+    "lon": -22.6506
+  },
+  {
+    "id": "04234",
+    "name": "Mittarfik Sisimiut",
+    "lat": 66.9514,
+    "lon": -53.7294
+  },
+  {
+    "id": "04211",
+    "name": "Mittarfik Upernavik",
+    "lat": 72.7903,
+    "lon": -56.1306
+  },
+  {
+    "id": "04213",
+    "name": "Mittarfik Uummannaq-Qaarsut",
+    "lat": 70.7342,
+    "lon": -52.6961
+  },
+  {
+    "id": "04224",
+    "name": "Mittarfik Aasiaat",
+    "lat": 68.7219,
+    "lon": -52.7847
+  },
+  {
+    "id": "06168",
+    "name": "Nakkehoved Fyr",
+    "lat": 56.1193,
+    "lon": 12.3424
+  },
+  {
+    "id": "04271",
+    "name": "Narsarsuaq Radiosonde",
+    "lat": 61.1575,
+    "lon": -45.44
+  },
+  {
+    "id": "06197",
+    "name": "Nex\u00F8 Vest",
+    "lat": 55.0557,
+    "lon": 15.0953
+  },
+  {
+    "id": "06007",
+    "name": "Nolsoy",
+    "lat": 61.958,
+    "lon": -6.617
+  },
+  {
+    "id": "06088",
+    "name": "Nordby",
+    "lat": 55.4483,
+    "lon": 8.4003
+  },
+  {
+    "id": "04266",
+    "name": "Nunarssuit",
+    "lat": 60.7636,
+    "lon": -48.4547
+  },
+  {
+    "id": "04250",
+    "name": "Nuuk",
+    "lat": 64.1667,
+    "lon": -51.75
+  },
+  {
+    "id": "06120",
+    "name": "Odense Lufthavn",
+    "lat": 55.4735,
+    "lon": 10.3297
+  },
+  {
+    "id": "06151",
+    "name": "Om\u00F8 Fyr",
+    "lat": 55.1598,
+    "lon": 11.1339
+  },
+  {
+    "id": "04202",
+    "name": "Pituffik",
+    "lat": 76.5333,
+    "lon": -68.75
+  },
+  {
+    "id": "04260",
+    "name": "Paamiut",
+    "lat": 62,
+    "lon": -49.7167
+  },
+  {
+    "id": "04272",
+    "name": "Qaqortoq",
+    "lat": 60.7167,
+    "lon": -46.05
+  },
+  {
+    "id": "04273",
+    "name": "Qaqortoq Heliport",
+    "lat": 60.7131,
+    "lon": -46.0294
+  },
+  {
+    "id": "04219",
+    "name": "Qeqertarsuaq Heliport",
+    "lat": 69.2511,
+    "lon": -53.5381
+  },
+  {
+    "id": "04254",
+    "name": "Qeqertarsuatsiaat",
+    "lat": 63.0833,
+    "lon": -50.6833
+  },
+  {
+    "id": "04214",
+    "name": "Qullissat",
+    "lat": 70.05,
+    "lon": -52.85
+  },
+  {
+    "id": "04205",
+    "name": "Qaanaaq",
+    "lat": 77.4833,
+    "lon": -69.2
+  },
+  {
+    "id": "06170",
+    "name": "Roskilde Lufthavn",
+    "lat": 55.5867,
+    "lon": 12.1366
+  },
+  {
+    "id": "06096",
+    "name": "R\u00F8m\u00F8/Juvre",
+    "lat": 55.1908,
+    "lon": 8.56
+  },
+  {
+    "id": "06159",
+    "name": "R\u00F8sn\u00E6s Fyr",
+    "lat": 55.7436,
+    "lon": 10.8691
+  },
+  {
+    "id": "06019",
+    "name": "Silstrup",
+    "lat": 56.93,
+    "lon": 8.6412
+  },
+  {
+    "id": "06034",
+    "name": "Sindal Flyveplads",
+    "lat": 57.5044,
+    "lon": 10.2227
+  },
+  {
+    "id": "04242",
+    "name": "Sioralik",
+    "lat": 65.0131,
+    "lon": -52.5286
+  },
+  {
+    "id": "06188",
+    "name": "Sj\u00E6lsmark",
+    "lat": 55.8764,
+    "lon": 12.4121
+  },
+  {
+    "id": "06041",
+    "name": "Skagen Fyr",
+    "lat": 57.7363,
+    "lon": 10.6318
+  },
+  {
+    "id": "06073",
+    "name": "Sletterhage Fyr",
+    "lat": 56.0955,
+    "lon": 10.5135
+  },
+  {
+    "id": "04312",
+    "name": "Station Nord",
+    "lat": 81.6,
+    "lon": -16.65
+  },
+  {
+    "id": "06032",
+    "name": "Stenh\u00F8j",
+    "lat": 57.3828,
+    "lon": 10.3349
+  },
+  {
+    "id": "06116",
+    "name": "Store Jyndevad",
+    "lat": 54.8987,
+    "lon": 9.123
+  },
+  {
+    "id": "04416",
+    "name": "Summit",
+    "lat": 72.5833,
+    "lon": -38.45
+  },
+  {
+    "id": "06089",
+    "name": "S\u00E6denstrand Fyr",
+    "lat": 55.4956,
+    "lon": 8.398
+  },
+  {
+    "id": "06118",
+    "name": "S\u00F8nderborg Lufthavn",
+    "lat": 54.9616,
+    "lon": 9.793
+  },
+  {
+    "id": "04360",
+    "name": "Tasiilaq",
+    "lat": 65.6,
+    "lon": -37.6333
+  },
+  {
+    "id": "06052",
+    "name": "Thybor\u00F8n",
+    "lat": 56.705,
+    "lon": 8.2206
+  },
+  {
+    "id": "06011",
+    "name": "Torshavn",
+    "lat": 62.0232,
+    "lon": -6.7644
+  },
+  {
+    "id": "06134",
+    "name": "Tranebjerg Syd",
+    "lat": 55.811,
+    "lon": 10.5839
+  },
+  {
+    "id": "06132",
+    "name": "Tranebjerg \u00D8st",
+    "lat": 55.8315,
+    "lon": 10.6217
+  },
+  {
+    "id": "06123",
+    "name": "Tvingsbjerg Fyr",
+    "lat": 55.3106,
+    "lon": 9.8928
+  },
+  {
+    "id": "06031",
+    "name": "Tylstrup",
+    "lat": 57.1852,
+    "lon": 9.9527
+  },
+  {
+    "id": "06136",
+    "name": "Tystofte",
+    "lat": 55.2465,
+    "lon": 11.3285
+  },
+  {
+    "id": "04253",
+    "name": "Ukiiviit",
+    "lat": 62.5667,
+    "lon": -50.4167
+  },
+  {
+    "id": "06093",
+    "name": "Vester Vedsted",
+    "lat": 55.2908,
+    "lon": 8.6551
+  },
+  {
+    "id": "06051",
+    "name": "Vestervig",
+    "lat": 56.7637,
+    "lon": 8.3207
+  },
+  {
+    "id": "06072",
+    "name": "\u00D8dum",
+    "lat": 56.3027,
+    "lon": 10.1272
+  },
+  {
+    "id": "06065",
+    "name": "\u00C5lestrup",
+    "lat": 56.6928,
+    "lon": 9.482
+  },
+  {
+    "id": "06070",
+    "name": "\u00C5rhus Lufthavn",
+    "lat": 56.3083,
+    "lon": 10.6254
+  },
+  {
+    "id": "06126",
+    "name": "\u00C5rslev",
+    "lat": 55.3088,
+    "lon": 10.4398
+  },
+  {
+    "id": "04220",
+    "name": "Aasiaat",
+    "lat": 68.7081,
+    "lon": -52.8517
+  }
+]

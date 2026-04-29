@@ -190,6 +190,22 @@
       border-color: #254a3f;
     }
 
+    .button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .button:disabled:hover {
+      transform: none;
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    .button.primary:disabled:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
     .hero-note {
       margin-top: 16px;
       font-size: 13px;
@@ -360,6 +376,113 @@
       font-size: 12px;
     }
 
+    /* Tilføjelser til søgning og datofelter — bruger eksisterende variabler. */
+    .input-pill {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      transition: 0.2s ease;
+      min-width: 0;
+    }
+
+    .input-pill:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .date-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: end;
+      margin-top: 26px;
+    }
+
+    .date-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .date-field span {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .date-field input {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: 0.2s ease;
+    }
+
+    .date-field input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .results-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .station-card {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+      border-radius: 18px;
+      padding: 16px 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-family: inherit;
+      color: var(--text);
+    }
+
+    .station-card:hover {
+      transform: translateY(-2px);
+      background: #fffdfa;
+      border-color: #bfb7a8;
+      box-shadow: 0 8px 22px rgba(40, 33, 20, 0.06);
+    }
+
+    .station-card .name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      line-height: 1.15;
+    }
+
+    .station-card .dist {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .station-card .id {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      letter-spacing: 0.06em;
+    }
+
     @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
@@ -427,172 +550,553 @@
             <div class="name">BA Technologies</div>
           </div>
         </div>
-        <div class="top-status" id="statusText">Indlæser data...</div>
+        <div class="top-status" id="statusText">Klar</div>
       </div>
 
-      <section class="hero">
-        <div class="hero-left">
-          <div class="eyebrow">DMI · Brandelev</div>
-          <h1>Vejrdata i et mere enkelt format.</h1>
-          <p class="intro">
-            Temperatur og luftfugtighed bliver hentet automatisk fra DMI, via API.
-          </p>
+      <!-- View 1: postnummersøgning -->
+      <div id="view-search">
+        <section class="hero">
+          <div class="hero-left">
+            <div class="eyebrow">DMI · Vejrobservationer</div>
+            <h1>Find vejrdata fra din nærmeste station.</h1>
+            <p class="intro">
+              Skriv dit postnummer for at se de fem nærmeste DMI-stationer der måler temperatur og luftfugtighed. Klik en station for at hente observationer i et valgt datointerval.
+            </p>
 
-          <div class="actions">
-            <a class="button primary" id="downloadLink" href="data/latest.csv" download>Download CSV</a>
-            <button class="button" onclick="loadCsv()">Opdater data</button>
-          </div>
+            <form id="searchForm" class="actions" autocomplete="off">
+              <input
+                id="postnrInput"
+                class="input-pill"
+                inputmode="numeric"
+                pattern="\d{4}"
+                maxlength="4"
+                placeholder="Postnummer (fx 4700)"
+                required
+              />
+              <button type="submit" class="button primary">Søg stationer</button>
+            </form>
 
-          <div class="hero-note">
-            Kilde: <code>data/latest.csv</code>
-          </div>
-        </div>
-
-        <div class="hero-right">
-          <div>
-            <div class="panel-label">Seneste temperatur</div>
-            <p class="panel-big" id="latestTemp">-</p>
-            <div class="panel-meta" id="latestTempTime">Ingen data endnu</div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-card">
-              <div class="k">Luftfugtighed</div>
-              <div class="v" id="latestHumidity">-</div>
-              <div class="s" id="latestHumidityTime">Ingen data endnu</div>
-            </div>
-
-            <div class="mini-card">
-              <div class="k">Rækker i datasæt</div>
-              <div class="v" id="rowCount">-</div>
-              <div class="s">Viser de 20 nyeste nedenfor</div>
+            <div class="hero-note">
+              Eksempler: <code>4700</code> Næstved · <code>1050</code> København · <code>8000</code> Aarhus
             </div>
           </div>
-        </div>
-      </section>
 
-      <div class="content">
-        <div class="section-head">
-          <div>
-            <h2>Seneste målinger</h2>
-            <p>Nyeste observationer fra den genererede CSV-fil.</p>
+          <div class="hero-right">
+            <div>
+              <div class="panel-label">Sådan virker det</div>
+              <p class="panel-big">3 trin</p>
+              <div class="panel-meta">
+                Postnummer → station → datointerval. Data hentes live fra DMI's metObs-API.
+              </div>
+            </div>
+
+            <div class="mini-grid">
+              <div class="mini-card">
+                <div class="k">Datakilde</div>
+                <div class="v">DMI</div>
+                <div class="s">opendataapi.dmi.dk</div>
+              </div>
+
+              <div class="mini-card">
+                <div class="k">Stationer</div>
+                <div class="v" id="stationCount">-</div>
+                <div class="s">aktive målestationer</div>
+              </div>
+            </div>
           </div>
+        </section>
+
+        <div class="content">
+          <div class="section-head">
+            <div>
+              <h2>Nærmeste stationer</h2>
+              <p>De fem stationer tættest på dit postnummer.</p>
+            </div>
+          </div>
+
+          <div id="searchMessage" class="message">
+            Indtast et postnummer ovenfor for at finde de nærmeste stationer.
+          </div>
+
+          <div id="resultsList" class="results-list" style="display:none;"></div>
         </div>
+      </div>
 
-        <div id="messageBox" class="message">Henter CSV...</div>
+      <!-- View 2: stationsdetalje -->
+      <div id="view-station" style="display:none;">
+        <section class="hero">
+          <div class="hero-left">
+            <div class="eyebrow" id="stationEyebrow">DMI · Station</div>
+            <h1 id="stationTitle">Station</h1>
+            <p class="intro" id="stationSub">Vælg et datointerval og hent observationer.</p>
 
-        <div class="table-wrap" id="tableWrapper" style="display:none;">
-          <table>
-            <thead>
-              <tr>
-                <th>Tidspunkt (UTC)</th>
-                <th>Luftfugtighed</th>
-                <th>Temperatur</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
+            <form id="dateForm" class="date-actions" autocomplete="off">
+              <label class="date-field">
+                <span>Fra</span>
+                <input type="date" id="fromDate" />
+              </label>
+              <label class="date-field">
+                <span>Til</span>
+                <input type="date" id="toDate" />
+              </label>
+              <button type="submit" class="button primary">Hent data</button>
+              <button type="button" class="button primary" id="downloadButton" disabled>Download CSV</button>
+              <button type="button" class="button" id="backButton">Tilbage til søgning</button>
+            </form>
+
+            <div class="hero-note" id="stationMeta">-</div>
+          </div>
+
+          <div class="hero-right">
+            <div>
+              <div class="panel-label">Seneste temperatur</div>
+              <p class="panel-big" id="latestTemp">-</p>
+              <div class="panel-meta" id="latestTempTime">Ingen data endnu</div>
+            </div>
+
+            <div class="mini-grid">
+              <div class="mini-card">
+                <div class="k">Luftfugtighed</div>
+                <div class="v" id="latestHumidity">-</div>
+                <div class="s" id="latestHumidityTime">Ingen data endnu</div>
+              </div>
+
+              <div class="mini-card">
+                <div class="k">Rækker i datasæt</div>
+                <div class="v" id="rowCount">-</div>
+                <div class="s">Viser de 20 nyeste nedenfor</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="content">
+          <div class="section-head">
+            <div>
+              <h2>Seneste målinger</h2>
+              <p>Nyeste observationer i det valgte interval.</p>
+            </div>
+          </div>
+
+          <div id="stationMessage" class="message">Klik "Hent data" for at indlæse observationer.</div>
+
+          <div class="table-wrap" id="tableWrapper" style="display:none;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tidspunkt (UTC)</th>
+                  <th>Luftfugtighed</th>
+                  <th>Temperatur</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <div class="footer">
-        <div>Data vises fra <code>data/latest.csv</code></div>
+        <div>Data hentes live fra <code>opendataapi.dmi.dk</code></div>
         <div>Made by Oliver Loebel</div>
       </div>
     </div>
   </div>
 
   <script>
-    function parseDanishNumber(value) {
-      if (!value) return null;
-      const normalized = value.replace(",", ".");
-      const parsed = Number(normalized);
-      return Number.isNaN(parsed) ? null : parsed;
-    }
+    const STATIONS_URL = "data/stations.json";
+    const POSTNR_API = "https://api.dataforsyningen.dk/postnumre/";
+    const DMI_OBS_URL = "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items";
 
-    function formatNumber(value, suffix = "") {
-      if (value === null || value === undefined) return "-";
+    let stationsCache = null;
+    let currentStation = null;
+    let lastDataset = null; // { stationId, stationName, fromDate, toDate, rows }
+
+    const $ = (id) => document.getElementById(id);
+    const setStatus = (text) => { $("statusText").textContent = text; };
+
+    function formatNumberDA(value, suffix = "") {
+      if (value === null || value === undefined || Number.isNaN(value)) return "-";
       return value.toLocaleString("da-DK", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 1
       }) + suffix;
     }
 
-    async function loadCsv() {
-      const messageBox = document.getElementById("messageBox");
-      const tableWrapper = document.getElementById("tableWrapper");
-      const tableBody = document.getElementById("tableBody");
-      const statusText = document.getElementById("statusText");
-      const downloadLink = document.getElementById("downloadLink");
+    function pad2(n) { return String(n).padStart(2, "0"); }
+
+    function isoDateOf(date) {
+      return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+    }
+
+    function formatUtcUiDA(date) {
+      return `${pad2(date.getUTCDate())}-${pad2(date.getUTCMonth() + 1)}-${date.getUTCFullYear()} ` +
+             `${pad2(date.getUTCHours())}:${pad2(date.getUTCMinutes())}`;
+    }
+
+    function formatUtcTableRow(date) {
+      return `${date.getUTCFullYear()}-${pad2(date.getUTCMonth() + 1)}-${pad2(date.getUTCDate())} ` +
+             `${pad2(date.getUTCHours())}:${pad2(date.getUTCMinutes())}:${pad2(date.getUTCSeconds())}`;
+    }
+
+    function slugifyStationName(name) {
+      return name
+        .toLowerCase()
+        .replace(/æ/g, "ae")
+        .replace(/ø/g, "oe")
+        .replace(/å/g, "aa")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function csvNumber(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return "";
+      return String(value).replace(".", ",");
+    }
+
+    function buildCsv(rows) {
+      let out = "ObservedUtc;HumidityPct;TempDryC\n";
+      for (const row of rows) {
+        out += `${formatUtcTableRow(row.observedDate)};${csvNumber(row.humidity)};${csvNumber(row.tempDry)}\n`;
+      }
+      return out;
+    }
+
+    function downloadCsv() {
+      if (!lastDataset || lastDataset.rows.length === 0) return;
+      const { stationId, stationName, fromDate, toDate, rows } = lastDataset;
+      const slug = slugifyStationName(stationName) || "station";
+      const filename = `dmi_${stationId}_${slug}_${fromDate}_${toDate}.csv`;
+
+      const csv = buildCsv(rows);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const toRad = (x) => x * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(a));
+    }
+
+    async function loadStations() {
+      if (stationsCache) return stationsCache;
+      const resp = await fetch(STATIONS_URL, { cache: "no-store" });
+      if (!resp.ok) throw new Error("Kunne ikke hente stationsliste (data/stations.json)");
+      stationsCache = await resp.json();
+      $("stationCount").textContent = stationsCache.length.toLocaleString("da-DK");
+      return stationsCache;
+    }
+
+    async function searchByPostnr(postnr) {
+      const messageBox = $("searchMessage");
+      const resultsList = $("resultsList");
 
       messageBox.className = "message";
-      messageBox.textContent = "Henter CSV...";
-      messageBox.style.display = "block";
+      resultsList.style.display = "none";
+      resultsList.innerHTML = "";
+
+      if (!/^\d{4}$/.test(postnr)) {
+        messageBox.className = "message error";
+        messageBox.textContent = "Ugyldigt postnummer. Brug 4 cifre.";
+        return;
+      }
+
+      messageBox.textContent = `Slår postnummer ${postnr} op ...`;
+      setStatus("Slår postnummer op ...");
+
+      let lon, lat, postnrName;
+      try {
+        const resp = await fetch(POSTNR_API + encodeURIComponent(postnr));
+        if (resp.status === 404) {
+          messageBox.className = "message error";
+          messageBox.textContent = `Postnummer ${postnr} blev ikke fundet.`;
+          setStatus("Ukendt postnummer");
+          return;
+        }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        if (!data.visueltcenter || data.visueltcenter.length < 2) {
+          throw new Error("Postnummer mangler koordinater");
+        }
+        [lon, lat] = data.visueltcenter;
+        postnrName = data.navn ?? "";
+      } catch (err) {
+        messageBox.className = "message error";
+        messageBox.textContent = "Kunne ikke slå postnummer op: " + err.message;
+        setStatus("Fejl ved postnummer-opslag");
+        return;
+      }
+
+      let stations;
+      try {
+        stations = await loadStations();
+      } catch (err) {
+        messageBox.className = "message error";
+        messageBox.textContent = err.message;
+        setStatus("Fejl");
+        return;
+      }
+
+      const ranked = stations
+        .map((s) => ({ ...s, dist: haversineKm(lat, lon, s.lat, s.lon) }))
+        .sort((a, b) => a.dist - b.dist)
+        .slice(0, 5);
+
+      if (ranked.length === 0) {
+        messageBox.className = "message";
+        messageBox.textContent = "Ingen stationer fundet i nærheden.";
+        setStatus("Ingen stationer");
+        return;
+      }
+
+      for (const s of ranked) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "station-card";
+        const distText = s.dist.toLocaleString("da-DK", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        });
+        btn.innerHTML = `
+          <div class="name"></div>
+          <div class="dist"></div>
+          <div class="id"></div>
+        `;
+        btn.querySelector(".name").textContent = s.name;
+        btn.querySelector(".dist").textContent = `${distText} km væk`;
+        btn.querySelector(".id").textContent = `Station ${s.id}`;
+        btn.addEventListener("click", () => showStation(s));
+        resultsList.appendChild(btn);
+      }
+
+      messageBox.style.display = "none";
+      resultsList.style.display = "grid";
+      setStatus(`Viser 5 nærmeste fra ${postnr}${postnrName ? " " + postnrName : ""}`);
+    }
+
+    function showStation(station) {
+      currentStation = station;
+      $("view-search").style.display = "none";
+      $("view-station").style.display = "block";
+
+      $("stationEyebrow").textContent = `DMI · Station ${station.id}`;
+      $("stationTitle").textContent = station.name;
+      $("stationSub").textContent =
+        "Vælg et datointerval og hent temperatur- og luftfugtighedsobservationer.";
+      $("stationMeta").textContent =
+        `Position: ${station.lat.toFixed(2)}, ${station.lon.toFixed(2)} · ID ${station.id}`;
+
+      $("latestTemp").textContent = "-";
+      $("latestTempTime").textContent = "Ingen data endnu";
+      $("latestHumidity").textContent = "-";
+      $("latestHumidityTime").textContent = "Ingen data endnu";
+      $("rowCount").textContent = "-";
+
+      const today = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      const todayIso = isoDateOf(today);
+      $("fromDate").min = "2020-01-01";
+      $("fromDate").max = todayIso;
+      $("toDate").min = "2020-01-01";
+      $("toDate").max = todayIso;
+      $("fromDate").value = isoDateOf(yesterday);
+      $("toDate").value = todayIso;
+
+      $("stationMessage").className = "message";
+      $("stationMessage").textContent = "Henter de seneste 24 timer ...";
+      $("stationMessage").style.display = "block";
+      $("tableWrapper").style.display = "none";
+      $("tableBody").innerHTML = "";
+
+      lastDataset = null;
+      $("downloadButton").disabled = true;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      fetchObservations();
+    }
+
+    function backToSearch() {
+      $("view-station").style.display = "none";
+      $("view-search").style.display = "block";
+      currentStation = null;
+      lastDataset = null;
+      $("downloadButton").disabled = true;
+      setStatus("Klar");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function fetchParameter(stationId, parameterId, startIso, endIso) {
+      const url = `${DMI_OBS_URL}` +
+        `?stationId=${encodeURIComponent(stationId)}` +
+        `&parameterId=${encodeURIComponent(parameterId)}` +
+        `&datetime=${encodeURIComponent(startIso + "/" + endIso)}` +
+        `&limit=300000`;
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        throw new Error(`DMI returnerede ${resp.status} for ${parameterId}`);
+      }
+      const data = await resp.json();
+      return Array.isArray(data.features) ? data.features : [];
+    }
+
+    async function fetchObservations() {
+      if (!currentStation) return;
+
+      const stationMessage = $("stationMessage");
+      const tableWrapper = $("tableWrapper");
+      const tableBody = $("tableBody");
+
+      const fromVal = $("fromDate").value;
+      const toVal = $("toDate").value;
+
+      stationMessage.className = "message";
       tableWrapper.style.display = "none";
       tableBody.innerHTML = "";
-      statusText.textContent = "Indlæser data...";
+
+      lastDataset = null;
+      $("downloadButton").disabled = true;
+
+      if (!fromVal || !toVal) {
+        stationMessage.className = "message error";
+        stationMessage.textContent = "Vælg både fra- og til-dato.";
+        stationMessage.style.display = "block";
+        setStatus("Manglende datoer");
+        return;
+      }
+
+      const startIso = `${fromVal}T00:00:00Z`;
+      const endIso = `${toVal}T23:59:59Z`;
+
+      if (new Date(startIso) > new Date(endIso)) {
+        stationMessage.className = "message error";
+        stationMessage.textContent = "Fra-dato skal være før eller lig med til-dato.";
+        stationMessage.style.display = "block";
+        setStatus("Ugyldigt interval");
+        return;
+      }
+
+      stationMessage.textContent = "Henter observationer fra DMI ...";
+      stationMessage.style.display = "block";
+      setStatus("Indlæser data ...");
 
       try {
-        const csvUrl = "data/latest.csv?t=" + Date.now();
-        downloadLink.href = csvUrl;
+        const [tempFeatures, humFeatures] = await Promise.all([
+          fetchParameter(currentStation.id, "temp_dry", startIso, endIso),
+          fetchParameter(currentStation.id, "humidity", startIso, endIso)
+        ]);
 
-        const response = await fetch(csvUrl, { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error("Kunne ikke hente CSV-filen");
+        const map = new Map();
+
+        const addRow = (feature, key) => {
+          const props = feature.properties;
+          if (!props || typeof props.observed !== "string" || typeof props.value !== "number") return;
+          const d = new Date(props.observed);
+          if (Number.isNaN(d.getTime())) return;
+          if (d.getUTCMinutes() !== 0 || d.getUTCSeconds() !== 0) return;
+          const k = d.toISOString();
+          let row = map.get(k);
+          if (!row) {
+            row = { observedDate: d, tempDry: null, humidity: null };
+            map.set(k, row);
+          }
+          row[key] = props.value;
+        };
+
+        for (const f of tempFeatures) addRow(f, "tempDry");
+        for (const f of humFeatures) addRow(f, "humidity");
+
+        const rows = [...map.values()].sort((a, b) => a.observedDate - b.observedDate);
+
+        if (rows.length === 0) {
+          stationMessage.className = "message";
+          stationMessage.textContent = "Ingen data i det valgte interval.";
+          stationMessage.style.display = "block";
+          $("latestTemp").textContent = "-";
+          $("latestTempTime").textContent = "Ingen data";
+          $("latestHumidity").textContent = "-";
+          $("latestHumidityTime").textContent = "Ingen data";
+          $("rowCount").textContent = "0";
+          setStatus("Ingen data i intervallet");
+          return;
         }
-
-        const text = await response.text();
-        const lines = text.trim().split("\n").filter(line => line.trim() !== "");
-
-        if (lines.length <= 1) {
-          throw new Error("CSV-filen indeholder ingen data");
-        }
-
-        const rows = lines.slice(1).map(line => {
-          const parts = line.split(";");
-          return {
-            observedUtc: parts[0] ?? "",
-            humidity: parseDanishNumber(parts[1] ?? ""),
-            tempDry: parseDanishNumber(parts[2] ?? "")
-          };
-        });
 
         const latest = rows[rows.length - 1];
 
-        document.getElementById("latestTemp").textContent =
-          formatNumber(latest.tempDry, " °C");
-        document.getElementById("latestHumidity").textContent =
-          formatNumber(latest.humidity, " %");
-        document.getElementById("latestTempTime").textContent =
-          "Målt: " + latest.observedUtc;
-        document.getElementById("latestHumidityTime").textContent =
-          "Målt: " + latest.observedUtc;
-        document.getElementById("rowCount").textContent =
-          rows.length.toLocaleString("da-DK");
+        $("latestTemp").textContent = formatNumberDA(latest.tempDry, " °C");
+        $("latestHumidity").textContent = formatNumberDA(latest.humidity, " %");
+        $("latestTempTime").textContent = "Målt: " + formatUtcUiDA(latest.observedDate) + " UTC";
+        $("latestHumidityTime").textContent = "Målt: " + formatUtcUiDA(latest.observedDate) + " UTC";
+        $("rowCount").textContent = rows.length.toLocaleString("da-DK");
 
         const newest20 = rows.slice(-20).reverse();
-
         for (const row of newest20) {
           const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${row.observedUtc}</td>
-            <td>${formatNumber(row.humidity, " %")}</td>
-            <td>${formatNumber(row.tempDry, " °C")}</td>
-          `;
+          const tdTime = document.createElement("td");
+          const tdHum = document.createElement("td");
+          const tdTemp = document.createElement("td");
+          tdTime.textContent = formatUtcTableRow(row.observedDate);
+          tdHum.textContent = formatNumberDA(row.humidity, " %");
+          tdTemp.textContent = formatNumberDA(row.tempDry, " °C");
+          tr.append(tdTime, tdHum, tdTemp);
           tableBody.appendChild(tr);
         }
 
-        messageBox.style.display = "none";
+        lastDataset = {
+          stationId: currentStation.id,
+          stationName: currentStation.name,
+          fromDate: fromVal,
+          toDate: toVal,
+          rows
+        };
+        $("downloadButton").disabled = false;
+
+        stationMessage.style.display = "none";
         tableWrapper.style.display = "block";
-        statusText.textContent = "Senest indlæst: " + new Date().toLocaleString("da-DK");
-      } catch (error) {
-        messageBox.className = "message error";
-        messageBox.textContent = "Fejl: " + error.message;
-        statusText.textContent = "Kunne ikke indlæse data";
+        setStatus("Senest indlæst: " + new Date().toLocaleString("da-DK"));
+      } catch (err) {
+        stationMessage.className = "message error";
+        stationMessage.textContent = "Fejl: " + err.message;
+        stationMessage.style.display = "block";
+        setStatus("Kunne ikke indlæse data");
       }
     }
 
-    loadCsv();
+    document.addEventListener("DOMContentLoaded", () => {
+      $("searchForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        searchByPostnr($("postnrInput").value.trim());
+      });
+
+      $("dateForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetchObservations();
+      });
+
+      $("backButton").addEventListener("click", backToSearch);
+      $("downloadButton").addEventListener("click", downloadCsv);
+
+      loadStations().catch(() => {
+        // Stationsantal vises blot som "-" hvis filen mangler;
+        // selve fejlen vises først når brugeren søger.
+      });
+    });
   </script>
 </body>
 </html>

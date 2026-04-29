@@ -4,14 +4,151 @@ using System.Text.Json;
 
 internal class Program
 {
-    private const string StationId = "06154";
-    private const string StationName = "Brandelev";
     private const string ParameterHumidity = "humidity";
     private const string ParameterTempDry = "temp_dry";
-    private const string BaseUrl = "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items";
-    private const int PageLimit = 300000; // RETTET: var 1000 — DMI tillader op til 300.000 per kald
+    private const string ObservationBaseUrl = "https://opendataapi.dmi.dk/v2/metObs/collections/observation/items";
+    private const string StationsUrl = "https://opendataapi.dmi.dk/v2/metObs/collections/station/items?limit=10000";
+    private const int PageLimit = 300000;
 
-    public static async Task Main()
+    public static async Task<int> Main(string[] args)
+    {
+        using var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DmiBrandelevCsv/1.0");
+
+        if (args.Length >= 2 && args[0] == "--station")
+        {
+            return await RunStationCsvModeAsync(httpClient, args[1]);
+        }
+
+        return await RunStationsListModeAsync(httpClient);
+    }
+
+    // Default mode: bygger docs/data/stations.json fra DMI's stationsendpoint.
+    private static async Task<int> RunStationsListModeAsync(HttpClient httpClient)
+    {
+        Console.WriteLine("Henter stationsliste fra DMI ...");
+        Console.WriteLine($"URL: {StationsUrl}");
+
+        using var response = await httpClient.GetAsync(StationsUrl);
+        var responseText = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine();
+            Console.WriteLine("DMI-kald fejlede.");
+            Console.WriteLine($"HTTP status: {(int)response.StatusCode} {response.StatusCode}");
+            Console.WriteLine(responseText);
+            return 1;
+        }
+
+        using var document = JsonDocument.Parse(responseText);
+
+        if (!document.RootElement.TryGetProperty("features", out var features) ||
+            features.ValueKind != JsonValueKind.Array)
+        {
+            Console.WriteLine("Uventet JSON-svar (ingen features).");
+            return 1;
+        }
+
+        var stations = new List<StationEntry>();
+
+        foreach (var feature in features.EnumerateArray())
+        {
+            if (!feature.TryGetProperty("properties", out var properties))
+                continue;
+
+            if (!properties.TryGetProperty("status", out var statusElement) ||
+                statusElement.ValueKind != JsonValueKind.String)
+                continue;
+
+            if (!string.Equals(statusElement.GetString(), "Active", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (!properties.TryGetProperty("parameterId", out var parameterIdElement) ||
+                parameterIdElement.ValueKind != JsonValueKind.Array)
+                continue;
+
+            bool hasTempDry = false;
+            bool hasHumidity = false;
+            foreach (var p in parameterIdElement.EnumerateArray())
+            {
+                if (p.ValueKind != JsonValueKind.String) continue;
+                var pid = p.GetString();
+                if (string.Equals(pid, ParameterTempDry, StringComparison.OrdinalIgnoreCase)) hasTempDry = true;
+                if (string.Equals(pid, ParameterHumidity, StringComparison.OrdinalIgnoreCase)) hasHumidity = true;
+            }
+            if (!hasTempDry || !hasHumidity) continue;
+
+            if (!properties.TryGetProperty("stationId", out var stationIdElement) ||
+                stationIdElement.ValueKind != JsonValueKind.String)
+                continue;
+
+            var stationId = stationIdElement.GetString();
+            if (string.IsNullOrWhiteSpace(stationId)) continue;
+
+            string name = stationId!;
+            if (properties.TryGetProperty("name", out var nameElement) &&
+                nameElement.ValueKind == JsonValueKind.String)
+            {
+                var n = nameElement.GetString();
+                if (!string.IsNullOrWhiteSpace(n)) name = n!;
+            }
+
+            double? lon = null;
+            double? lat = null;
+            if (feature.TryGetProperty("geometry", out var geometry) &&
+                geometry.TryGetProperty("coordinates", out var coords) &&
+                coords.ValueKind == JsonValueKind.Array)
+            {
+                var arr = coords.EnumerateArray().ToArray();
+                if (arr.Length >= 2 &&
+                    arr[0].ValueKind == JsonValueKind.Number &&
+                    arr[1].ValueKind == JsonValueKind.Number)
+                {
+                    lon = arr[0].GetDouble();
+                    lat = arr[1].GetDouble();
+                }
+            }
+            if (lon == null || lat == null) continue;
+
+            stations.Add(new StationEntry
+            {
+                Id = stationId!,
+                Name = name,
+                Lat = Math.Round(lat.Value, 4),
+                Lon = Math.Round(lon.Value, 4)
+            });
+        }
+
+        var unique = stations
+            .GroupBy(s => s.Id)
+            .Select(g => g.First())
+            .OrderBy(s => s.Name, StringComparer.Create(CultureInfo.GetCultureInfo("da-DK"), false))
+            .ToList();
+
+        Console.WriteLine($"Fundet {unique.Count} aktive stationer med både temp_dry og humidity.");
+
+        var docsDataDirectory = ResolveDocsDataDirectory();
+        Directory.CreateDirectory(docsDataDirectory);
+        var stationsFile = Path.Combine(docsDataDirectory, "stations.json");
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        await File.WriteAllTextAsync(
+            stationsFile,
+            JsonSerializer.Serialize(unique, jsonOptions),
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+
+        Console.WriteLine($"Skrevet: {stationsFile}");
+        return 0;
+    }
+
+    // Valgfri mode: dotnet run -- --station <id>  (genererer CSV for én station).
+    private static async Task<int> RunStationCsvModeAsync(HttpClient httpClient, string stationId)
     {
         var startUtc = DateTimeOffset.Parse(
             "2022-10-01T00:00:00Z",
@@ -25,33 +162,31 @@ internal class Program
 
         var outputFile = Path.Combine(
             outputDirectory,
-            $"brandelev_{StationId}_{startUtc:yyyy-MM-dd}_to_{endUtc:yyyy-MM-dd}.csv");
+            $"station_{stationId}_{startUtc:yyyy-MM-dd}_to_{endUtc:yyyy-MM-dd}.csv");
 
         var rows = new SortedDictionary<DateTimeOffset, WeatherRow>();
 
-        using var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("DmiBrandelevCsv/1.0");
-
-        Console.WriteLine($"Henter DMI-data for {StationName} ({StationId})");
+        Console.WriteLine($"Henter DMI-data for station {stationId}");
         Console.WriteLine($"Fra: {startUtc:yyyy-MM-dd HH:mm:ss} UTC");
         Console.WriteLine($"Til: {endUtc:yyyy-MM-dd HH:mm:ss} UTC");
         Console.WriteLine();
 
-        await FetchParameterIntoRowsAsync(httpClient, ParameterHumidity, startUtc, endUtc, rows);
-        await FetchParameterIntoRowsAsync(httpClient, ParameterTempDry, startUtc, endUtc, rows);
+        await FetchParameterIntoRowsAsync(httpClient, stationId, ParameterHumidity, startUtc, endUtc, rows);
+        await FetchParameterIntoRowsAsync(httpClient, stationId, ParameterTempDry, startUtc, endUtc, rows);
 
         WriteCsv(outputFile, rows.Values);
-        CopyLatestCsvToDocs(outputFile);
 
         Console.WriteLine();
         Console.WriteLine("Færdig.");
         Console.WriteLine($"CSV-fil gemt her:");
         Console.WriteLine(outputFile);
         Console.WriteLine($"Antal rækker: {rows.Count}");
+        return 0;
     }
 
     private static async Task FetchParameterIntoRowsAsync(
         HttpClient httpClient,
+        string stationId,
         string parameterId,
         DateTimeOffset startUtc,
         DateTimeOffset endUtc,
@@ -61,7 +196,7 @@ internal class Program
 
         foreach (var (chunkStartUtc, chunkEndUtc) in SplitIntoMonthlyRanges(startUtc, endUtc))
         {
-            string? nextUrl = BuildUrl(StationId, parameterId, chunkStartUtc, chunkEndUtc, PageLimit);
+            string? nextUrl = BuildObservationUrl(stationId, parameterId, chunkStartUtc, chunkEndUtc, PageLimit);
             int pageCount = 0;
             int rowsInChunk = 0;
 
@@ -134,7 +269,6 @@ internal class Program
 
                 nextUrl = GetNextLink(document.RootElement);
 
-                // RETTET: vis progress hvis der er flere sider (usandsynligt med limit=300000)
                 if (nextUrl != null)
                     Console.WriteLine($"  Side {pageCount} hentet, henter næste side...");
             }
@@ -171,7 +305,7 @@ internal class Program
         }
     }
 
-    private static string BuildUrl(
+    private static string BuildObservationUrl(
         string stationId,
         string parameterId,
         DateTimeOffset startUtc,
@@ -182,7 +316,7 @@ internal class Program
         var endText = endUtc.ToString("yyyy-MM-dd'T'HH':'mm':'ss'Z'", CultureInfo.InvariantCulture);
         var datetimeRange = $"{startText}/{endText}";
 
-        return $"{BaseUrl}" +
+        return $"{ObservationBaseUrl}" +
                $"?stationId={Uri.EscapeDataString(stationId)}" +
                $"&parameterId={Uri.EscapeDataString(parameterId)}" +
                $"&datetime={Uri.EscapeDataString(datetimeRange)}" +
@@ -238,32 +372,26 @@ internal class Program
         }
     }
 
-    private static void CopyLatestCsvToDocs(string outputFile)
+    private static string ResolveDocsDataDirectory()
     {
-        // RETTET: wrappet i try/catch så et manglende docs-bibliotek ikke crasher programmet
-        try
+        var candidate = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", ".."));
+
+        // Find nærmeste mappe der indeholder en "docs"-mappe.
+        var dir = new DirectoryInfo(candidate);
+        for (int i = 0; i < 6 && dir != null; i++)
         {
-            var repoRoot = Path.GetFullPath(Path.Combine(
-                AppContext.BaseDirectory, "..", "..", "..", ".."));
-
-            var docsDataDirectory = Path.Combine(repoRoot, "docs", "data");
-            Directory.CreateDirectory(docsDataDirectory);
-
-            var latestCsvFile = Path.Combine(docsDataDirectory, "latest.csv");
-            File.Copy(outputFile, latestCsvFile, overwrite: true);
-
-            Console.WriteLine($"Seneste CSV kopieret til:");
-            Console.WriteLine(latestCsvFile);
+            var docs = Path.Combine(dir.FullName, "docs");
+            if (Directory.Exists(docs))
+                return Path.Combine(docs, "data");
+            dir = dir.Parent;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Advarsel: kunne ikke kopiere til docs/data: {ex.Message}");
-        }
+
+        return Path.Combine(candidate, "docs", "data");
     }
 
     private static bool ShouldIncludeRow(DateTimeOffset observedUtc)
     {
-        // RETTET: kun hele timer (fx 12:00:00, 13:00:00) — var tidligere hver halve time
         return observedUtc.Second == 0 && observedUtc.Minute == 0;
     }
 }
@@ -278,4 +406,12 @@ internal sealed class WeatherRow
     public DateTimeOffset ObservedUtc { get; }
     public double? Humidity { get; set; }
     public double? TempDry { get; set; }
+}
+
+internal sealed class StationEntry
+{
+    public string Id { get; set; } = "";
+    public string Name { get; set; } = "";
+    public double Lat { get; set; }
+    public double Lon { get; set; }
 }
